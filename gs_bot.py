@@ -21,8 +21,7 @@ async def daily_wordle():
     await WURMPLE_CHANNEL.send('https://cdn.discordapp.com/attachments/967143913615929435/967153996613709824/unknown.png')
     await WURMPLE_CHANNEL.send('OMG babe! New wordle just dropped! \
 *Sloppy mouth to mouth combat noises*'
-        + '\nhttps://www.nytimes.com/games/wordle/index.html') + \
-            '\n Give ' + toGuess + " a try."
+        + '\nhttps://www.nytimes.com/games/wordle/index.html') + '\nGive ' + toGuess + " a try."
 
 
 

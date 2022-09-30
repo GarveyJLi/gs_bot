@@ -1,9 +1,18 @@
 from discord.ext import commands
 from bot_token import tok
 import aiocron
-from bs4 import BeautifulSoup
 from googlesearch import search
-from word_scraper import randomWord
+from bs4 import BeautifulSoup
+import requests
+
+def randomWord():
+    word_generator = requests.get( \
+        'https://www.coolgenerator.com/5-letter-word-generator' \
+).text.encode("utf-8")
+    soup = BeautifulSoup(word_generator, 'lxml')
+    word_box = soup.find('li', class_='col-sm-4 col-xs-6')
+    word = word_box.find('p', class_='text-center font-18')
+    return str(word.find('span'))[6:11]
 
 
 #client = discord.Client()
@@ -14,14 +23,16 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
 
-@aiocron.crontab('0 0 * * *')
+@aiocron.crontab('00 00 * * *')
 async def daily_wordle():
     WURMPLE_CHANNEL=bot.get_channel(967143913615929435)
-    toGuess = randomWord().lower()
-    await WURMPLE_CHANNEL.send('https://cdn.discordapp.com/attachments/967143913615929435/967153996613709824/unknown.png')
+    toGuess = str(randomWord().lower())
+    await WURMPLE_CHANNEL.send('https://cdn.discordapp.com/attachments/ \
+967143913615929435/967153996613709824/unknown.png')
     await WURMPLE_CHANNEL.send('OMG babe! New wordle just dropped! \
-*Sloppy mouth to mouth combat noises*'
-        + '\nhttps://www.nytimes.com/games/wordle/index.html') + '\nGive ' + toGuess + " a try."
+        *Sloppy mouth to mouth combat noises*'
+        + '\nhttps://www.nytimes.com/games/wordle/index.html' + \
+            '\nGive ' + toGuess + " a try.") 
 
 
 
@@ -32,7 +43,7 @@ async def test(ctx, arg1):
 @bot.command()
 async def goog(ctx, query):
     async with ctx.typing():
-        for j in search(query, tld="co.in", num = 1, stop=1, pause=2):
+        for j in search(query, tld="co.in", num=1, stop=1, pause=2):
             await ctx.send(f"{j}")
 
 
@@ -53,4 +64,5 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+#py -3 gs_bot.py
 bot.run(tok, bot=True)
